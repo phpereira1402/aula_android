@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
+
     };
 
     @Override
@@ -128,25 +130,11 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean GravarMemoriaExterna(Pessoa pessoa){
 
-
-
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)){
-            //File diretorio = new File(Environment.getExternalStorageDirectory() + "/Documents");
             File diretorio = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-
             File arquivo = new File(diretorio, "pessoa.obj");
-
-
-
             try {
-
-                if (!diretorio.exists())
-                    diretorio.mkdirs();
-
-                if (!arquivo.exists())
-                    arquivo.createNewFile();
-
                 FileOutputStream fos = new FileOutputStream(arquivo);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(pessoa);
@@ -167,21 +155,15 @@ public class MainActivity extends AppCompatActivity {
         if (Environment.MEDIA_MOUNTED.equals(state)){
             File diretorio = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
             File arquivo = new File(diretorio, "pessoa.obj");
-
-
             try {
-                if (!diretorio.exists())
-                    diretorio.mkdirs();
-
-                if (!arquivo.exists())
-                    arquivo.createNewFile();
-
                 FileInputStream fis = new FileInputStream(arquivo);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 p = (Pessoa) ois.readObject();
                 fis.close();
                 ois.close();
             } catch (Exception ex){
+                System.out.println(ex.toString());
+                return new Pessoa(0, "Pessoa não cadastrada");
 
             }
         }
